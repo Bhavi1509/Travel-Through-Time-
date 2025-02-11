@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chronosphere 2024 - Time Travel Login</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            font-family: 'Space Mono', monospace;
+        }
+
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .portal-bg {
+            background: #000;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 5px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 3px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 4px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            animation: starMove 120s linear infinite;
+        }
+
+        @keyframes starMove {
+            from { background-position: 0 0, 40px 60px, 130px 270px; }
+            to { background-position: 550px 550px, 390px 410px, 380px 520px; }
+        }
+
+        .nebula {
+            background: linear-gradient(45deg, 
+                rgba(255,0,128,0.3), 
+                rgba(0,128,255,0.3), 
+                rgba(128,0,255,0.3));
+            filter: blur(50px);
+        }
+
+        .time-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .neon-border {
+            box-shadow: 0 0 10px #0ff,
+                        0 0 20px #0ff,
+                        0 0 30px #0ff,
+                        inset 0 0 10px #0ff;
+        }
+
+        .input-field {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: #0ff;
+            box-shadow: 0 0 10px #0ff;
+        }
+
+        .cyber-button {
+            background: linear-gradient(45deg, #00f2ff, #0051ff);
+            border: 2px solid #00f2ff;
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .cyber-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.8);
+        }
+
+        /* Glitch Effect */
+        .glitch {
+            animation: glitch 1s linear infinite;
+        }
+
+        @keyframes glitch {
+            2%, 64% { transform: translate(2px,0) skew(0deg); }
+            4%, 60% { transform: translate(-2px,0) skew(0deg); }
+            62% { transform: translate(0,0) skew(5deg); }
+        }
+    </style>
+</head>
+<body class="portal-bg min-h-screen flex flex-col items-center justify-center p-4">
+    <a href="EventPage.html"> Redirecting to the event Page</a>
+    <div id="app">
+        <!-- Nebula Background -->
+        <div class="nebula fixed inset-0"></div>
+
+        <!-- Login/Register Card -->
+        <div class="time-card relative z-10 w-full max-w-md p-8 rounded-xl text-white">
+            <h1 class="orbitron text-3xl font-bold text-center mb-8 glitch">
+                <span class="text-cyan-400">Chrono</span>sphere 2024
+            </h1>
+
+            <!-- Toggle Buttons -->
+            <div class="flex mb-6 gap-4">
+                <button @click="mode = 'login'" 
+                        :class="mode === 'login' ? 'bg-blue-500' : 'bg-transparent'"
+                        class="flex-1 py-2 rounded-lg neon-border transition-all duration-300">
+                    Login
+                </button>
+                <button @click="mode = 'register'"
+                        :class="mode === 'register' ? 'bg-blue-500' : 'bg-transparent'"
+                        class="flex-1 py-2 rounded-lg neon-border transition-all duration-300">
+                    Register
+                </button>
+            </div>
+
+            <!-- Login Form -->
+            <form v-if="mode === 'login'" @submit.prevent="handleLogin" class="space-y-4">
+                <div>
+                    <input type="email" v-model="loginForm.email" placeholder="Time Traveler Email" 
+                           class="input-field w-full p-3 rounded-lg text-white" required>
+                </div>
+                <div>
+                    <input type="password" v-model="loginForm.password" placeholder="Temporal Password" 
+                           class="input-field w-full p-3 rounded-lg text-white" required>
+                </div>
+                <button type="submit" class="cyber-button w-full py-3 rounded-lg font-bold">
+                    <a href="EventPage.html">Enter The Chronosphere</a>
+                </button>
+            </form>
+
+            <!-- Register Form -->
+            <form v-else @submit.prevent="handleRegister" class="space-y-4">
+                <div>
+                    <input type="text" v-model="registerForm.name" placeholder="Time Traveler Name" 
+                           class="input-field w-full p-3 rounded-lg text-white" required>
+                </div>
+                <div>
+                    <input type="email" v-model="registerForm.email" placeholder="Quantum Email" 
+                           class="input-field w-full p-3 rounded-lg text-white" required>
+                </div>
+                <div>
+                    <input type="password" v-model="registerForm.password" placeholder="Create Password" 
+                           class="input-field w-full p-3 rounded-lg text-white" required>
+                </div>
+                <div>
+                    <input type="password" v-model="registerForm.confirmPassword" placeholder="Confirm Password" 
+                           class="input-field w-full p-3 rounded-lg text-white" required>
+                </div>
+                <button type="submit" class="cyber-button w-full py-3 rounded-lg font-bold">
+                    Begin Time Travel Journey
+                </button>
+            </form>
+
+            <!-- Social Login -->
+            <div class="mt-6">
+                <p class="text-center text-sm mb-4">Or travel through time with</p>
+                <div class="flex justify-center space-x-4">
+                    <button class="p-2 rounded-full neon-border hover:bg-blue-500 transition-all">
+                        <i class="bi bi-google text-xl"></i>
+                    </button>
+                    <button class="p-2 rounded-full neon-border hover:bg-blue-500 transition-all">
+                        <i class="bi bi-facebook text-xl"></i>
+                    </button>
+                    <button class="p-2 rounded-full neon-border hover:bg-blue-500 transition-all">
+                        <i class="bi bi-twitter text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue
+
+        createApp({
+            data() {
+                return {
+                    mode: 'login',
+                    loginForm: {
+                        email: '',
+                        password: ''
+                    },
+                    registerForm: {
+                        name: '',
+                        email: '',
+                        password: '',
+                        confirmPassword: ''
+                    }
+                }
+            },
+            methods: {
+                handleLogin() {
+                    // Here you would normally handle the login logic
+                    console.log('Login attempt:', this.loginForm)
+                    // Redirect to main site after successful login
+                    window.location.href = 'main.html'
+                },
+                handleRegister() {
+                    if(this.registerForm.password !== this.registerForm.confirmPassword) {
+                        alert('Passwords do not match!')
+                        return
+                    }
+                    // Here you would normally handle the registration logic
+                    console.log('Register attempt:', this.registerForm)
+                    // Switch to login mode after successful registration
+                    this.mode = 'login'
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+</html>
