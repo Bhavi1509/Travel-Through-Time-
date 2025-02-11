@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Travel Fest - Journey Through Time</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: #000;
+            overflow-x: hidden;
+            color: white;
+        }
+
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .planet:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes orbit {
+            from { transform: rotate(0deg) translateX(var(--orbit-radius)) rotate(0deg); }
+            to { transform: rotate(360deg) translateX(var(--orbit-radius)) rotate(-360deg); }
+        }
+
+        .orbit-path {
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            position: absolute;
+            transform: translate(-50%, -50%);
+        }
+
+        .planet-info {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            padding: 2rem;
+            border-radius: 1rem;
+            z-index: 100;
+            display: none;
+            max-width: 80%;
+        }
+
+        .sun {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle at center, #ffd700, #ff4500);
+            border-radius: 50%;
+            box-shadow: 0 0 60px #ff4500;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 60px #ff4500; }
+            50% { box-shadow: 0 0 100px #ff4500; }
+            100% { box-shadow: 0 0 60px #ff4500; }
+        }
+
+        .timeline {
+            height: 4px;
+            background: linear-gradient(90deg, #ff4500, #ffd700);
+            position: relative;
+        }
+
+        .timeline-dot {
+            width: 16px;
+            height: 16px;
+            background: #ffd700;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-dot:hover {
+            transform: translateY(-50%) scale(1.2);
+            box-shadow: 0 0 20px #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <nav class="fixed top-0 w-full bg-black bg-opacity-70 backdrop-blur-md z-50 px-6 py-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="text-xl font-bold text-white">Time Travel Fest</div>
+            <div class="space-x-6">
+                <button onclick="showSection('events')" class="text-white hover:text-yellow-400">Events</button>
+                <a href="EventPage.html"></a>
+                <button onclick="showSection('schedule')" class="text-white hover:text-yellow-400">Schedule</button>
+                <a href="EventPage.html"></a>
+                <button onclick="showSection('gallery')" class="text-white hover:text-yellow-400">Gallery</button>
+                <a href="EventPage.html"></a>
+                <button onclick="showSection('tickets')" class="text-white hover:text-yellow-400">Tickets</button>
+                <a href="EventPage.html"></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="min-h-screen relative overflow-hidden pt-20">
+        <!-- Solar System -->
+        <div id="solarSystem" class="relative w-full h-screen">
+            <div class="sun absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+            
+            <!-- Orbit Paths -->
+            <div class="orbit-path" style="width: 300px; height: 300px; left: 50%; top: 50%;"></div>
+            <div class="orbit-path" style="width: 500px; height: 500px; left: 50%; top: 50%;"></div>
+            <div class="orbit-path" style="width: 700px; height: 700px; left: 50%; top: 50%;"></div>
+
+            <!-- Planets -->
+            <div class="planet bg-green-500" onclick="showPlanetInfo('prehistoric')" 
+                 style="width: 60px; height: 60px; --orbit-radius: 150px; animation: orbit 20s linear infinite;">
+                <div class="absolute top-full mt-2 text-center w-full">Prehistoric</div>
+            </div>
+            
+            <div class="planet bg-blue-500" onclick="showPlanetInfo('medieval')"
+                 style="width: 80px; height: 80px; --orbit-radius: 250px; animation: orbit 30s linear infinite;">
+                <div class="absolute top-full mt-2 text-center w-full">Medieval</div>
+            </div>
+            
+            <div class="planet bg-purple-500" onclick="showPlanetInfo('future')"
+                 style="width: 70px; height: 70px; --orbit-radius: 350px; animation: orbit 40s linear infinite;">
+                <div class="absolute top-full mt-2 text-center w-full">Future</div>
+            </div>
+        </div>
+
+        <!-- Planet Info Modals -->
+        <div id="prehistoricInfo" class="planet-info">
+            <h2 class="text-2xl font-bold mb-4">Prehistoric Era</h2>
+            <p class="mb-4">Journey back to the dawn of time! Experience:</p>
+            <ul class="list-disc pl-6 mb-4">
+                <li>Dinosaur Safari Adventure</li>
+                <li>Cave Painting Workshop</li>
+                <li>Prehistoric Survival Challenge</li>
+            </ul>
+            <button onclick="closePlanetInfo()" class="bg-red-500 px-4 py-2 rounded">Close</button>
+        </div>
+
+        <!-- Timeline Navigation -->
+        <div class="fixed bottom-8 w-full px-20">
+            <div class="timeline">
+                <div class="timeline-dot" style="left: 0%" onclick="jumpToEra('prehistoric')"></div>
+                <div class="timeline-dot" style="left: 50%" onclick="jumpToEra('medieval')"></div>
+                <div class="timeline-dot" style="left: 100%" onclick="jumpToEra('future')"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showPlanetInfo(era) {
+            document.querySelectorAll('.planet-info').forEach(info => info.style.display = 'none');
+            document.getElementById(era + 'Info').style.display = 'block';
+        }
+
+        function closePlanetInfo() {
+            document.querySelectorAll('.planet-info').forEach(info => info.style.display = 'none');
+        }
+
+        function showSection(section) {
+            console.log('Navigating to:', section);
+            // Implement section navigation
+        }
+
+        function jumpToEra(era) {
+            console.log('Jumping to era:', era);
+            // Implement smooth scrolling to era section
+        }
+
+        // Make planets draggable for mobile
+        const planets = document.querySelectorAll('.planet');
+        planets.forEach(planet => {
+            let isDragging = false;
+            let currentX;
+            let currentY;
+            let initialX;
+            let initialY;
+
+            planet.addEventListener('touchstart', dragStart);
+            planet.addEventListener('touchend', dragEnd);
+            planet.addEventListener('touchmove', drag);
+
+            function dragStart(e) {
+                initialX = e.touches[0].clientX - currentX;
+                initialY = e.touches[0].clientY - currentY;
+                isDragging = true;
+            }
+
+            function dragEnd(e) {
+                isDragging = false;
+            }
+
+            function drag(e) {
+                if (isDragging) {
+                    e.preventDefault();
+                    currentX = e.touches[0].clientX - initialX;
+                    currentY = e.touches[0].clientY - initialY;
+                    setTranslate(currentX, currentY, planet);
+                }
+            }
+
+            function setTranslate(xPos, yPos, el) {
+                el.style.transform = translate3d(${xPos}px, ${yPos}px, 0);
+            }
+        });
+    </script>
+</body>
+</html>
